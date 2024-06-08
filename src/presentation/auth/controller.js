@@ -13,6 +13,10 @@ export class AuthController {
       });
     } catch (error) {
       console.log(error.message);
+      res.status(400).json({
+        ok: false,
+        msg: error.message,
+      }); 
       
     }
   };
