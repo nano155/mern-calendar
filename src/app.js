@@ -4,7 +4,6 @@ import { dirname } from 'path';
 import 'dotenv/config'
 import { AppRoutes } from "./presentation/routes.js";
 import { MongoConnect } from "./services/dao/mongo/mongo.connect.js";
-import moment from "moment";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

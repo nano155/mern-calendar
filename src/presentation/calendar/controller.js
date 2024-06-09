@@ -17,11 +17,10 @@ export class CalendarController {
     const reqEvent = req.body;
     const uid = req.uid
 
+
     try {
-        console.log(uid);
       const newEvent = await EventService.createEvent(reqEvent, uid);
 
-      console.log(newEvent);
       res.json({
         ok: true,
         evento:newEvent,
@@ -48,22 +47,21 @@ export class CalendarController {
         });
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ok:false, msg: 'internal server error'})
+        return res.status(500).json({ok:false, msg: error.message})
     }
   };
   static deleteEvents = async (req, res) => {
     const id = req.params.id
-
     const uid = req.uid
     try {
-        const deleteEvent = await EventService.updateEvent(id, uid)
+        const deleteEvent = await EventService.deleteEvent(id, uid)
         res.json({
           ok: true,
-          evento: updateEvent,
+          evento: deleteEvent,
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ok: false, msg: 'internal server error'})
+        res.status(500).json({ok: false, msg: error.message})
     }
   };
 }

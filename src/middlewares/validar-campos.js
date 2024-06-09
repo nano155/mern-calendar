@@ -15,16 +15,15 @@ export class ValidatorsField{
     }
 
     static validateJwt = async (req, res, next) =>{
-        const {token} = req.cookies;
-
-        if(!token) {
-            res.status(401).json({
-                ok:false,
-                msg:'No hay token en la peticions'
-            })
-        }
-
         try {
+            const {token} = req.cookies
+    
+            if(!token) {
+                return res.status(401).json({
+                    ok:false,
+                    msg:'No hay token en la peticions'
+                })
+            }
 
             const {name, uid} = await JwtAdapter.tokenValidate(token)
 

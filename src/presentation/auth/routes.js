@@ -28,6 +28,7 @@ export class AuthRoutes {
     );
 
     router.get("/renew",[ValidatorsField.validateJwt],AuthController.renewUser);
+    router.get('/clear-cookie', AuthController.logout )
 
     return router;
   }

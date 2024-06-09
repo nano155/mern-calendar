@@ -6,10 +6,9 @@ export class AuthController {
     try {
       const { name, email, password } = req.body;
       const newUser = await UserService.createUser({ name, email, password });
+      res.cookie('token', newUser.token, { httpOnly: true, secure: true, sameSite: 'None'})
       res.status(201).json({
-        ok:true,
-        uid: newUser.id,
-        name: newUser.name
+        newUser
       });
     } catch (error) {
       console.log(error.message);
@@ -25,8 +24,9 @@ export class AuthController {
     try {
         const { email, password } = req.body;  
         const loginUser = await UserService.loginUser({email, password}) 
-        res.cookie('token', loginUser.token)
+        res.cookie('token', loginUser.token, { httpOnly: true, secure: true, sameSite: 'None' })
         res.status(200).json({
+          ok:true,
           loginUser,
           msg: "login",
         });
@@ -48,7 +48,18 @@ export class AuthController {
 
     res.json({
       ok: true,
+      uid, 
+      name,
       token
     });
   };
+
+  static logout = (req, res) =>{
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: true, // Cambia esto si estás usando HTTPS
+      sameSite: 'None' // Igual que la configuración de creación de la cookie
+  });
+  res.status(200).json({ message: 'Cookie deleted successfully' });
+  }
 }

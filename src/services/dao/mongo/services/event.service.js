@@ -1,76 +1,68 @@
 import { EventModel } from "../models/event.js";
 
-
 export class EventService {
+  static async createEvent(event, uid) {
+    try {
+      const { user, ...rest } = event;
 
-    static async createEvent(event, uid){
+      const newEvent = new EventModel({
+        user: uid,
+        ...rest,
+      });
 
-        try {
-            
-            const newEvent = new EventModel({
-                user:uid,
-                ...event
-            })
-    
-            const dBEvent = await newEvent.save()
+      const dBEvent = await newEvent.save();
 
-            return dBEvent
-        } catch (error) {
-            return error.message
-        }
+      return dBEvent;
+    } catch (error) {
+      return error.message;
     }
+  }
 
-    static async getEvents(event){
-        try {
-            const events = await EventModel.find()
-            .populate('user', 'name');
+  static async getEvents(event) {
+    try {
+      const events = await EventModel.find().populate("user", "name");
 
-            return events
-            
-        } catch (error) {
-            throw error
-        }
+      return events;
+    } catch (error) {
+      throw error;
     }
+  }
 
-    static async updateEvent(event, id, uid){
-        try {
-            const evento = await EventModel.findById(id);
-            if(!evento) throw new Error("Event doesn't found")
-                if(evento.user.toString() !== uid){
-                    throw new Error('unauthorized!')
-                }
-                const nuevoEvento = {
-                    ...event,
-                    user:uid
-                }
-            const eventUpdate = await EventModel.findByIdAndUpdate({_id:id}, nuevoEvento, {new:true})
-        
+  static async updateEvent(event, id, uid) {
+    try {
+      const evento = await EventModel.findById(id);
+      if (!evento) throw new Error("Event doesn't found");
+      if (evento.user.toString() !== uid) {
+        throw new Error("unauthorized!");
+      }
+      const nuevoEvento = {
+        ...event,
+        user: uid,
+      };
+      const eventUpdate = await EventModel.findByIdAndUpdate(
+        { _id: id },
+        nuevoEvento,
+        { new: true }
+      );
 
-            return eventUpdate
-            
-        } catch (error) {
-
-            throw error
-            
-        }
+      return eventUpdate;
+    } catch (error) {
+      throw Error(error);
     }
-    static async deleteEvent(id, uid){
-        try {
-            const evento = await EventModel.findById(id);
-            if(!evento) throw new Error("Event doesn't found")
+  }
+  static async deleteEvent(id, uid) {
+    try {
+      const evento = await EventModel.findById(id);
+      if (!evento) throw new Error("Event doesn't found");
 
-                if(evento.user.toString() !== uid){
-                    throw new Error('unauthorized!')
-                }
-            const eventUpdate = await EventModel.findByIdAndDelete({_id:id})
-        
+      if (evento.user.toString() !== uid) {
+        throw new Error("unauthorized!");
+      }
+      const eventUpdate = await EventModel.findByIdAndDelete({ _id: id });
 
-            return eventUpdate
-            
-        } catch (error) {
-
-            throw error
-            
-        }
+      return eventUpdate;
+    } catch (error) {
+      throw Error(error);
     }
+  }
 }
